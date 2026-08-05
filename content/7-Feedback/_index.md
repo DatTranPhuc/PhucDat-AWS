@@ -6,39 +6,38 @@ chapter: false
 pre: " <b> 7. </b> "
 ---
 
-
-> Here, you can freely share your personal opinions about your experience participating in the First Cloud AI Journey program. This will help the FCAJ team improve any shortcomings based on the following aspects:
+> Below are my personal reflections on my experience participating in the **First Cloud AI Journey (FCAJ)** program. I hope these contributions will help the FCAJ team improve and enhance the quality of the program:
 
 ### Overall Evaluation
 
 **1. Working Environment**  
-The working environment is very friendly and open. FCAJ members are always willing to help whenever I encounter difficulties, even outside working hours. The workspace is tidy and comfortable, helping me focus better. However, I think it would be nice to have more social gatherings or team bonding activities to strengthen relationships.
+The environment in the FCAJ program is very friendly and comfortable, without creating heavy pressure. Everyone in the community is open and always willing to support each other when facing difficulties. This is one of the key factors that helped me stay motivated throughout the program.
 
 **2. Support from Mentor / Team Admin**  
-The mentor provides very detailed guidance, explains clearly when I don’t understand, and always encourages me to ask questions. The admin team supports administrative tasks, provides necessary documents, and creates favorable conditions for me to work effectively. I especially appreciate that the mentor allows me to try and solve problems myself instead of just giving the answer.
+The admin team and mentors are very enthusiastic and respond quickly. Whenever I had questions about technical issues or submission procedures, I always received timely answers. This support kept me from getting stuck on any problem for too long and helped me maintain my progress.
 
 **3. Relevance of Work to Academic Major**  
-The tasks I was assigned align well with the knowledge I learned at university, while also introducing me to new areas I had never encountered before. This allowed me to both strengthen my foundational knowledge and gain practical skills.
+The program content is partially aligned with what I studied in school, while also introducing many new areas I had to explore on my own — such as deploying real AWS infrastructure, writing technical documentation in workshop format, and working with Hugo and GitHub. I particularly appreciate this, as it pushed me to learn proactively beyond what was taught in the classroom.
 
 **4. Learning & Skill Development Opportunities**  
-During the internship, I learned many new skills such as using project management tools, teamwork skills, and professional communication in a corporate environment. The mentor also shared valuable real-world experiences that helped me better plan my career path.
+Joining FCAJ made me feel like I was not learning alone. The community in the program is very active — whenever I encountered a technical error or didn't understand a section, there was always someone willing to discuss and share their experience. This is something I find distinctly different from self-studying through documentation alone.
 
 **5. Company Culture & Team Spirit**  
-The company culture is very positive: everyone respects each other, works seriously but still keeps things enjoyable. When there are urgent projects, everyone works together and supports one another regardless of their position. This made me feel like a real part of the team, even as an intern.
+The spirit of the program is very healthy: people don't hold back knowledge and are willing to share their approaches and what they've learned. When someone posts a question in the group, multiple people often jump in to discuss and offer different perspectives, helping everyone grow together.
 
-**6. Internship Policies / Benefits**  
-The company provides an internship allowance and offers flexible working hours when needed. In addition, having the opportunity to join internal training sessions is a big plus.
+**6. Program Policies / Benefits for Participants**  
+The program provides a template, learning resources, and clear guidance that helps newcomers get started without feeling overwhelmed. However, I think having a complete, polished example workshop would make it easier for participants to visualize the expected output — especially for those encountering AWS for the first time.
 
 ---
 
 ### Additional Questions
-- What did you find **most satisfying** during your internship?  
-- What do you think the company **should improve** for future interns?  
-- If recommending to a friend, would you **suggest they intern here**? Why or why not?  
+- What I found **most satisfying**: Learning within a supportive community rather than figuring everything out alone. Having people alongside me during the hands-on AWS journey gave me significantly more confidence.
+- What I think the program **should improve**: Adding at least one complete example workshop as a reference would help participants better understand the expected structure, level of detail, and presentation style for their submissions.
+- If recommending to a friend: **Yes, I would absolutely recommend it** — especially for those who want to enter the Cloud/AWS field in a structured way, within a supportive learning community rather than studying in isolation.
 
 ---
 
 ### Suggestions & Expectations
-- Do you have any suggestions to improve the internship experience?  
-- Would you like to continue this program in the future?  
-- Any other comments (free sharing):
+- Add at least one complete example workshop so participants can reference the structure, presentation style, and level of detail expected.
+- Yes, I very much want to continue participating in future editions of the program — both to reinforce what I've already learned and to explore new AWS topics.
+- Additional feedback: The program is doing very well in terms of community and technical support. If this is maintained in future editions, FCAJ has the potential to become one of the highest-quality hands-on AWS programs for students in Vietnam.

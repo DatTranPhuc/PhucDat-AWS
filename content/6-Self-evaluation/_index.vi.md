@@ -7,8 +7,8 @@ pre: " <b> 6. </b> "
 ---
 
 
-Trong suốt thời gian thực tập tại **[Tên công ty/tổ chức]** từ **[ngày bắt đầu]** đến **[ngày kết thúc]**, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
-Tôi đã tham gia **[mô tả ngắn gọn dự án hoặc công việc chính]**, qua đó cải thiện kỹ năng **[liệt kê kỹ năng: lập trình, phân tích, viết báo cáo, giao tiếp…]**.  
+Trong suốt thời gian tham gia chương trình **First Cloud AI Journey (FCAJ)** từ **11/05/2026** đến **31/07/2026**, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
+Tôi đã tham gia **xây dựng FCJ Workshop Template — một workshop thực hành trên nền tảng AWS**, qua đó cải thiện kỹ năng **sử dụng các dịch vụ AWS Cloud (EC2, S3, Lambda...), viết tài liệu kỹ thuật, triển khai hệ thống cloud và làm việc với Git/GitHub**.  
 
 Về tác phong, tôi luôn cố gắng hoàn thành tốt nhiệm vụ, tuân thủ nội quy, và tích cực trao đổi với đồng nghiệp để nâng cao hiệu quả công việc.
 
@@ -32,6 +32,6 @@ Về tác phong, tôi luôn cố gắng hoàn thành tốt nhiệm vụ, tuân t
 
 ### Cần cải thiện
 
-* Nâng cao tính kỹ luật, chấp hành nghiêm chỉnh nội quy của công ty hoặc bất kỳ trong một tổ chức nào
-* Cải thiện trong cách tư duy giải quyết vấn đề
-* Học cách giao tiếp tốt hơn trong giao tiếp hằng ngày và trong công việc, xử lý tình huống
+* **Kỷ luật về thời gian và quy trình:** Đây là điểm tôi tự đánh giá ở mức trung bình trong kỳ tham gia FCAJ. Tôi cần rèn luyện thêm thói quen tuân thủ deadline, đảm bảo các task được hoàn thành đúng tiến độ đề ra, đặc biệt khi làm việc song song nhiều phần của workshop cùng lúc.
+* **Tư duy giải quyết vấn đề kỹ thuật:** Trong quá trình xây dựng FCJ Workshop Template, đôi khi tôi còn mất nhiều thời gian để xử lý các lỗi kỹ thuật trên AWS (cấu hình IAM, networking...). Cần cải thiện khả năng phân tích root cause nhanh hơn và tiếp cận vấn đề có hệ thống hơn.
+* **Giao tiếp và trình bày kỹ thuật:** Tôi nhận thấy bản thân còn hạn chế trong việc diễn đạt ý tưởng kỹ thuật một cách rõ ràng, cả bằng văn bản (tài liệu workshop) lẫn khi trao đổi trực tiếp. Cần luyện tập viết tài liệu mạch lạc hơn và tự tin hơn khi trình bày trước nhóm.

@@ -10,11 +10,11 @@ chapter: false
 
 
 ### Student Information:
-&emsp; **Full Name:** Nguyen Dinh Tuan Dat
+&emsp; **Full Name:** Tran Phuc Dat
 
-&emsp; **Phone Number:** 0799730205 
+&emsp; **Phone Number:** 0937035028
 
-&emsp; **Email:** tuandatnd.dev@gmail.com
+&emsp; **Email:** datph74@gmail.com
 
 &emsp; **University:** FPT University
 

@@ -7,11 +7,11 @@ chapter: false
 
 # Báo cáo thực tập
 ### Thông tin sinh viên:
-&emsp; **Họ và tên:** Nguyễn Đình Tuấn Đạt
+&emsp; **Họ và tên:** Trần Phúc Đạt
 
-&emsp; **Số điện thoại:** 0799730205
+&emsp; **Số điện thoại:** 0937035028
 
-&emsp; **Email:** tuandatnd.dev@gmail.com
+&emsp; **Email:** datph74@gmail.com
 
 &emsp; **Trường:** Đại học FPT
 
