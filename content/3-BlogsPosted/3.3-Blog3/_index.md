@@ -8,6 +8,8 @@ pre: " <b> 3.3. </b> "
 
 # Aurora DSQL: Building a Multi-Region Active-Active REST API
 
+![Multi-Region Active-Active Architecture: Route 53 → ALB → EC2 → Aurora DSQL](/images/3-BlogsPosted/blog3-aurora-dsql.jpg)
+
 An AWS Database Blog article introduces how to combine **Spring Boot + Amazon Aurora DSQL** to build a **Multi-Region Active-Active** REST API, solving 3 real-world problems:
 
 **1. No static passwords:** Uses `DSQLConnector` for IAM Role authentication, auto-refreshes tokens, encrypts with TLS — no hardcoded credentials.

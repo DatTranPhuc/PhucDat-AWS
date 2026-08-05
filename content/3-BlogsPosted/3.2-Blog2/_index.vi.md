@@ -8,6 +8,8 @@ pre: " <b> 3.2. </b> "
 
 # Kiro Steering Files & AWS Security Standards
 
+![Steering Files giúp AI tuân thủ tiêu chuẩn bảo mật AWS](/images/3-BlogsPosted/blog2-kiro-steering.jpg)
+
 **Vấn đề:** AI không hiểu tiêu chuẩn bảo mật nội bộ của tổ chức. Khi yêu cầu tạo S3 bucket, AI có thể bỏ qua encryption, versioning, hay VPC endpoint restrictions.
 
 **Giải pháp — Kiro Steering Files:** Định nghĩa một lần các security rules cố định, AI sẽ tự tham chiếu trong mọi tác vụ.

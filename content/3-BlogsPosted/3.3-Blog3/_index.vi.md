@@ -8,6 +8,8 @@ pre: " <b> 3.3. </b> "
 
 # Aurora DSQL: Xây dựng REST API Multi-Region Active-Active
 
+![Kiến trúc Multi-Region Active-Active: Route 53 → ALB → EC2 → Aurora DSQL](/images/3-BlogsPosted/blog3-aurora-dsql.jpg)
+
 Bài viết trên AWS Database Blog giới thiệu cách kết hợp **Spring Boot + Amazon Aurora DSQL** để xây dựng REST API **Multi-Region Active-Active**, giải quyết 3 bài toán thực tế:
 
 **1. Không cần password tĩnh:** Dùng `DSQLConnector` xác thực bằng IAM Role, tự refresh token, mã hóa TLS — không hardcode credential.

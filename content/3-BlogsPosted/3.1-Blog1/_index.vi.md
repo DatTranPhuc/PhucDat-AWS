@@ -8,6 +8,8 @@ pre: " <b> 3.1. </b> "
 
 # AWS Shield Advanced: Phân tích DDoS với Attack Flow Logs
 
+![Kiến trúc tham khảo: Phân tích DDoS với flow logs trong AWS Shield Advanced](/images/3-BlogsPosted/blog1-ddos-shield.jpg)
+
 AWS Shield Advanced vừa bổ sung tính năng **attack flow logs** — cho phép ghi lại chi tiết từng gói tin trong quá trình DDoS mitigation, xuất log mỗi 5 phút, hỗ trợ định dạng JSON/Parquet, giới hạn 75MB/file.
 
 **3 thành phần kiến trúc phân phối log:**

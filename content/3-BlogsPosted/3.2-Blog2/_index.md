@@ -8,6 +8,8 @@ pre: " <b> 3.2. </b> "
 
 # Kiro Steering Files & AWS Security Standards
 
+![Steering Files Keep AI Aligned with AWS Security Standards](/images/3-BlogsPosted/blog2-kiro-steering.jpg)
+
 **Problem:** AI doesn't understand your organization's internal security standards. When asked to create an S3 bucket, it may skip encryption, versioning, or VPC endpoint restrictions.
 
 **Solution — Kiro Steering Files:** Define security rules once as a fixed context; AI will automatically reference them in every task.

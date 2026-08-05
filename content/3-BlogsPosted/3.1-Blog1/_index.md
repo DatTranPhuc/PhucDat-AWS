@@ -8,6 +8,8 @@ pre: " <b> 3.1. </b> "
 
 # AWS Shield Advanced: DDoS Analysis with Attack Flow Logs
 
+![Reference Architecture: DDoS visibility with AWS Shield Advanced flow logs](/images/3-BlogsPosted/blog1-ddos-shield.jpg)
+
 AWS Shield Advanced introduced **attack flow logs** — capturing packet-level detail during DDoS mitigation, exported every 5 minutes, supporting JSON/Parquet formats, with a 75MB/file limit.
 
 **3-component log delivery architecture:**
