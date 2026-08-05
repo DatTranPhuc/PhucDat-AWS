@@ -6,23 +6,24 @@ chapter: false
 pre: " <b> 3.1. </b> "
 ---
 
-# SESSION POLICIES TRONG AMAZON EKS POD IDENTITY
+# AWS Shield Advanced: Phân tích DDoS với Attack Flow Logs
 
-Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+AWS Shield Advanced vừa bổ sung tính năng **attack flow logs** — cho phép ghi lại chi tiết từng gói tin trong quá trình DDoS mitigation, xuất log mỗi 5 phút, hỗ trợ định dạng JSON/Parquet, giới hạn 75MB/file.
 
-Các điểm chính cần nắm:
+**3 thành phần kiến trúc phân phối log:**
 
-* Session policy là một IAM policy inline được chỉ định khi tạo hoặc cập nhật Pod Identity association.
-* Quyền hiệu quả = intersection (giao) giữa permissions của IAM role và session policy → session policy chỉ có thể thu hẹp, không thể mở rộng quyền.
-* Giúp tránh tình trạng over-permissioning khi reuse chung một IAM role cho nhiều workloads có nhu cầu khác nhau.
-* Hỗ trợ cả same-account và cross-account (qua IAM role chaining).
-* Giảm đáng kể số lượng IAM roles cần quản lý, tránh chạm giới hạn quota IAM trong cluster lớn.
-* Cấu hình dễ dàng qua AWS Management Console, AWS CLI hoặc AWS SDK khi tạo association giữa Kubernetes ServiceAccount và IAM role.
+* **DeliverySource** — ARN của Shield Protection
+* **DeliveryDestination** — S3 (Athena), CloudWatch Logs, hoặc Firehose (SIEM)
+* **Delivery** — kênh kết nối Source ↔ Destination
 
-Tính năng này đặc biệt hữu ích khi bạn có nhiều ứng dụng chạy trên cùng một IAM role nhưng cần giới hạn quyền khác nhau (ví dụ: một pod chỉ đọc S3 bucket cụ thể, pod khác chỉ gọi một số API nhất định).
+**Các trường log quan trọng:** `srcaddr`, `dstaddr`, `tcp_flags`, `action` (Block/Allow), `srccountry`.
 
-...Hình ảnh...
+**Triển khai qua AWS CLI** với 4 bước: `list-protections` → `put-delivery-source` → `put-delivery-destination` → `create-delivery`.
 
-...Link...
+Điểm nổi bật: hỗ trợ **cross-account & cross-region centralization** — gom log từ nhiều AWS account về một S3 bucket trung tâm để phân tích bằng Athena + QuickSight, không cần cài Agent.
 
-...Hướng dẫn...
+---
+
+**Link bài đăng:** [Xem bài viết trên AWS Study Group Facebook](https://www.facebook.com/photo/?fbid=1787438342420914&set=gm.2211111629653797&idorvanity=660548818043427)
+
+**Nguồn tham khảo:** [Gain visibility into DDoS attacks with flow logs in AWS Shield Advanced](https://aws.amazon.com/vi/blogs/security/gain-visibility-into-ddos-attacks-with-flow-logs-in-aws-shield-advanced/)

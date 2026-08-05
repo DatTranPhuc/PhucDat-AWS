@@ -1,28 +1,32 @@
 ---
 title: "Blog 2"
 date: 2024-01-01
-weight: 1
+weight: 2
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
 
-# SESSION POLICIES IN AMAZON EKS POD IDENTITY
+# Kiro Steering Files & AWS Security Standards
 
-Amazon EKS Pod Identity has recently added the session policies feature, allowing you to narrow IAM permissions flexibly and precisely for each pod without needing to create many separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+**Problem:** AI doesn't understand your organization's internal security standards. When asked to create an S3 bucket, it may skip encryption, versioning, or VPC endpoint restrictions.
 
-Key points to know:
+**Solution — Kiro Steering Files:** Define security rules once as a fixed context; AI will automatically reference them in every task.
 
-* A session policy is an inline IAM policy specified when creating or updating a Pod Identity association.
-* Effective permissions = intersection between the IAM role permissions and the session policy → the session policy can only narrow permissions, not expand them.
-* Helps avoid over-permissioning when reusing a single IAM role for multiple workloads with different needs.
-* Supports both same-account and cross-account (via IAM role chaining).
-* Significantly reduces the number of IAM roles that need to be managed, helping avoid hitting IAM quota limits in large clusters.
-* Easily configured through the AWS Management Console, AWS CLI, or AWS SDK when creating an association between a Kubernetes ServiceAccount and an IAM role.
+```markdown
+# AWS Security Standards
+## IAM: Least privilege, no AdministratorAccess
+## S3: Encryption by default, block public access, enable versioning
+## Logging: CloudTrail + AWS Config must be enabled
+## Networking: No 0.0.0.0/0 unless justified
+## Compliance: CIS AWS Foundations Benchmark
+```
 
-This feature is especially useful when you have many applications running on the same IAM role but need different permission restrictions (for example: one pod only reads a specific S3 bucket, another pod only calls certain APIs).
+**Real-world result:** Instead of generating a bare `Type: AWS::S3::Bucket`, AI automatically adds Encryption, Versioning, Bucket Policy, and Public Access Block from the start — reducing misconfigurations, especially useful in **Multi-Account AWS** environments.
 
-...Image...
+Steering Files is 1 of 5 techniques for using Kiro + Amazon Q to improve Security Posture, alongside: Security Finding Analysis, Automated Remediation, Security Review, and SCP Generation.
 
-...Link...
+---
 
-...Guide...
+**Post link:** [View post on AWS Study Group Facebook](https://www.facebook.com/photo/?fbid=2034832500720323&set=gm.2176154606482833&idorvanity=660548818043427)
+
+**Reference:** [Five ways to use Kiro and Amazon Q - AWS Security Blog](https://aws.amazon.com/blogs/security/five-ways-to-use-kiro-and-amazon-q-developer-to-improve-your-aws-security-posture/)

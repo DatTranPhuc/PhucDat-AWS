@@ -1,41 +1,20 @@
 ---
 title : "Load Balancer"
 date : 2024-01-01
-weight : 4
+weight : 5
 chapter : false
-pre : " <b> 5.4. </b> "
+pre : " <b> 5.5. </b> "
 ---
 
 #### Tổng quan
 
-Trong phần này, một bộ cân bằng tải Application Load Balancer (ALB) sẽ được cấu hình để công khai ứng dụng chạy trên EC2 thông qua một endpoint HTTP công cộng. Bộ cân bằng tải tiếp nhận các yêu cầu từ máy khách trên cổng **80** và chuyển tiếp chúng đến một target group chứa máy chủ EC2 backend trên cổng **8080**.
+Trong phần này, một bộ cân bằng tải Application Load Balancer (ALB) sẽ được cấu hình để công khai ứng dụng chạy trên EC2 thông qua một endpoint HTTP công cộng. Bộ cân bằng tải tiếp nhận các yêu cầu từ máy khách trên cổng **80** và chuyển tiếp chúng đến target group **aws-c8n** chứa máy chủ EC2 backend trên cổng **8080**.
 
 Các mục tiêu chính của phần này bao gồm:
 
-+ Tạo một target group cho máy chủ EC2 backend.
-+ Đăng ký EC2 instance vào target group.
-+ Xác minh rằng target ở trạng thái khỏe mạnh (healthy).
 + Khởi tạo một Application Load Balancer hướng internet (internet-facing).
 + Cấu hình listener HTTP và các quy tắc định tuyến (routing rules).
 + Xác minh bộ cân bằng tải ở trạng thái hoạt động (active).
-
-#### Tạo target group
-
-Một target group có tên **aws-c8n** được tạo với loại target là **Instance**. Giao thức là **HTTP**, cổng đích là **8080**, và phiên bản giao thức là **HTTP1**. Đường dẫn kiểm tra sức khỏe (health check path) là `/swagger-ui/index.html#/` và mã thành công mong đợi là **200**.
-
-![Target group review](/images/5-Workshop/5.4-Load-Balancer/target-group-review.png)
-
-#### Đăng ký EC2 target
-
-Máy chủ EC2 **CenFra-MS** đang chạy được chọn làm backend target. Cổng đích được thiết lập là **8080**, khớp với cổng được container ứng dụng sử dụng.
-
-![Register target](/images/5-Workshop/5.4-Load-Balancer/register-target.png)
-
-#### Xác minh sức khỏe target
-
-Sau khi target được đăng ký, target group hiển thị **1 healthy target** (1 đích khỏe mạnh) và **0 unhealthy targets** (0 đích không khỏe mạnh). Điều này xác nhận rằng bộ cân bằng tải có thể chuyển tiếp lưu lượng truy cập đến máy chủ backend thành công.
-
-![Healthy target group](/images/5-Workshop/5.4-Load-Balancer/target-group-healthy.png)
 
 #### Chọn loại Load Balancer
 

@@ -1,28 +1,25 @@
 ---
 title: "Blog 3"
 date: 2024-01-01
-weight: 1
+weight: 3
 chapter: false
 pre: " <b> 3.3. </b> "
 ---
 
-# SESSION POLICIES TRONG AMAZON EKS POD IDENTITY
+# Aurora DSQL: Xây dựng REST API Multi-Region Active-Active
 
-Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+Bài viết trên AWS Database Blog giới thiệu cách kết hợp **Spring Boot + Amazon Aurora DSQL** để xây dựng REST API **Multi-Region Active-Active**, giải quyết 3 bài toán thực tế:
 
-Các điểm chính cần nắm:
+**1. Không cần password tĩnh:** Dùng `DSQLConnector` xác thực bằng IAM Role, tự refresh token, mã hóa TLS — không hardcode credential.
 
-* Session policy là một IAM policy inline được chỉ định khi tạo hoặc cập nhật Pod Identity association.
-* Quyền hiệu quả = intersection (giao) giữa permissions của IAM role và session policy → session policy chỉ có thể thu hẹp, không thể mở rộng quyền.
-* Giúp tránh tình trạng over-permissioning khi reuse chung một IAM role cho nhiều workloads có nhu cầu khác nhau.
-* Hỗ trợ cả same-account và cross-account (qua IAM role chaining).
-* Giảm đáng kể số lượng IAM roles cần quản lý, tránh chạm giới hạn quota IAM trong cluster lớn.
-* Cấu hình dễ dàng qua AWS Management Console, AWS CLI hoặc AWS SDK khi tạo association giữa Kubernetes ServiceAccount và IAM role.
+**2. Xử lý conflict bằng OCC (Optimistic Concurrency Control):** DSQL không dùng Lock. Khi 2 request cùng commit — 1 thành công, 1 nhận lỗi `40001`. Không có Deadlock.
 
-Tính năng này đặc biệt hữu ích khi bạn có nhiều ứng dụng chạy trên cùng một IAM role nhưng cần giới hạn quyền khác nhau (ví dụ: một pod chỉ đọc S3 bucket cụ thể, pod khác chỉ gọi một số API nhất định).
+**3. Spring Retry + HikariCP:** Cấu hình `DsqlExceptionOverride` giữ connection khi gặp `40001`, sau đó dùng `@Retryable` + Exponential Backoff để tự retry — client vẫn nhận **HTTP 200 OK**.
 
-...Hình ảnh...
+**Kiến trúc:** Route 53 → ALB → EC2 (Spring Boot + HikariCP) → Aurora DSQL (us-east-1 ↔ us-west-2, synchronous replication). Khi 1 Region gặp sự cố, Route 53 tự chuyển traffic — không cần sửa code.
 
-...Link...
+---
 
-...Hướng dẫn...
+**Link bài đăng:** [Xem bài viết trên AWS Study Group Facebook](https://www.facebook.com/photo?fbid=2093845508234493&set=gm.2199940367437590&idorvanity=660548818043427)
+
+**Nguồn tham khảo:** [Build a Spring Boot REST API with Amazon Aurora DSQL](https://aws.amazon.com/blogs/database/build-a-spring-boot-rest-api-with-amazon-aurora-dsql/)

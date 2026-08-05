@@ -1,9 +1,9 @@
 ---
 title: "Configure Amazon CloudWatch Logs"
 date: 2026-07-28
-weight: 6
+weight: 7
 chapter: false
-pre: "<b> 5.6. </b>"
+pre: "<b> 5.7. </b>"
 ---
 
 # Monitor EC2 Application Logs with Amazon CloudWatch

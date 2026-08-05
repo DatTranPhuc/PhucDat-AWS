@@ -6,23 +6,24 @@ chapter: false
 pre: " <b> 3.1. </b> "
 ---
 
-# SESSION POLICIES IN AMAZON EKS POD IDENTITY
+# AWS Shield Advanced: DDoS Analysis with Attack Flow Logs
 
-Amazon EKS Pod Identity has recently added the session policies feature, allowing you to narrow IAM permissions flexibly and precisely for each pod without needing to create many separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+AWS Shield Advanced introduced **attack flow logs** — capturing packet-level detail during DDoS mitigation, exported every 5 minutes, supporting JSON/Parquet formats, with a 75MB/file limit.
 
-Key points to know:
+**3-component log delivery architecture:**
 
-* A session policy is an inline IAM policy specified when creating or updating a Pod Identity association.
-* Effective permissions = intersection between the IAM role permissions and the session policy → the session policy can only narrow permissions, not expand them.
-* Helps avoid over-permissioning when reusing a single IAM role for multiple workloads with different needs.
-* Supports both same-account and cross-account (via IAM role chaining).
-* Significantly reduces the number of IAM roles that need to be managed, helping avoid hitting IAM quota limits in large clusters.
-* Easily configured through the AWS Management Console, AWS CLI, or AWS SDK when creating an association between a Kubernetes ServiceAccount and an IAM role.
+* **DeliverySource** — Shield Protection ARN
+* **DeliveryDestination** — S3 (Athena), CloudWatch Logs, or Firehose (SIEM)
+* **Delivery** — the logical channel linking Source ↔ Destination
 
-This feature is especially useful when you have many applications running on the same IAM role but need different permission restrictions (for example: one pod only reads a specific S3 bucket, another pod only calls certain APIs).
+**Key log fields:** `srcaddr`, `dstaddr`, `tcp_flags`, `action` (Block/Allow), `srccountry`.
 
-...Image...
+**AWS CLI deployment** in 4 steps: `list-protections` → `put-delivery-source` → `put-delivery-destination` → `create-delivery`.
 
-...Link...
+Highlight: supports **cross-account & cross-region centralization** — aggregating logs from multiple AWS accounts into a central S3 bucket for analysis with Athena + QuickSight, no Agent required.
 
-...Guide...
+---
+
+**Post link:** [View post on AWS Study Group Facebook](https://www.facebook.com/photo/?fbid=1787438342420914&set=gm.2211111629653797&idorvanity=660548818043427)
+
+**Reference:** [Gain visibility into DDoS attacks with flow logs in AWS Shield Advanced](https://aws.amazon.com/vi/blogs/security/gain-visibility-into-ddos-attacks-with-flow-logs-in-aws-shield-advanced/)
