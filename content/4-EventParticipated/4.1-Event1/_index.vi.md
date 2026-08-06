@@ -6,117 +6,66 @@ chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
+# Bài Thu Hoạch: "Cloud Architect Challenge"
 
-# Bài thu hoạch “GenAI-powered App-DB Modernization workshop”
+&emsp; **Tên sự kiện:** Cloud Architect Challenge — Hoạt động mở đầu FCAJ
 
-### Mục Đích Của Sự Kiện
+&emsp; **Thời gian:** Trong khuôn khổ chương trình First Cloud AI Journey (FCAJ), 2026
 
-- Chia sẻ best practices trong thiết kế ứng dụng hiện đại
-- Giới thiệu phương pháp DDD và event-driven architecture
-- Hướng dẫn lựa chọn compute services phù hợp
-- Giới thiệu công cụ AI hỗ trợ development lifecycle
+&emsp; **Địa điểm:** Văn phòng AWS Việt Nam, TP. Hồ Chí Minh
 
-### Danh Sách Diễn Giả
+&emsp; **Vai trò:** Người tham gia / Thành viên nhóm
 
-- **Jignesh Shah** - Director, Open Source Databases
-- **Erica Liu** - Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** - Assc. Specialist SA, Serverless Amazon Web Services
+---
+
+### Tổng Quan Sự Kiện
+
+**Cloud Architect Challenge** là một cuộc thi tương tác theo nhóm, được tổ chức như hoạt động mở đầu của chương trình FCAJ. Tám đội tham gia thi đua bằng cách trả lời các câu hỏi trải rộng trên nhiều chủ đề: nền tảng Cloud Computing, các dịch vụ AWS, thiết kế kiến trúc đám mây và các tình huống kỹ thuật thực tế.
+
+Cuộc thi diễn ra theo hình thức loại dần — sau mỗi vòng, đội có số điểm thấp nhất sẽ bị loại cho đến khi còn lại một đội chiến thắng. Hình thức này đòi hỏi cả kiến thức kỹ thuật lẫn khả năng làm việc nhóm dưới áp lực thời gian.
+
+---
 
 ### Nội Dung Nổi Bật
 
-#### Đưa ra các ảnh hưởng tiêu cực của kiến trúc ứng dụng cũ
+#### Cách Thức Thi Đấu
+- **8 đội** thi đấu đồng thời qua nhiều vòng
+- Cấu trúc **loại dần** — đội điểm thấp nhất bị loại sau mỗi vòng
+- Câu hỏi bao gồm: khái niệm Cloud cơ bản, lựa chọn dịch vụ AWS, đánh đổi kiến trúc và kịch bản thực tế
+- Yêu cầu đội phải đồng thuận nhanh trước khi nộp đáp án
 
-- Thời gian release sản phẩm lâu → Mất doanh thu/bỏ lỡ cơ hội
-- Hoạt động kém hiệu quả → Mất năng suất, tốn kém chi phí
-- Không tuân thủ các quy định về bảo mật → Mất an ninh, uy tín
+#### Những Điều Khiến Cuộc Thi Thử Thách
+- Áp lực thời gian buộc các đội phải đưa ra quyết định nhanh — không có chỗ cho tranh luận dài dòng
+- Một số câu hỏi liên quan đến việc so sánh các dịch vụ AWS có chức năng gần giống nhau (ví dụ: SQS vs. SNS vs. EventBridge), đòi hỏi hiểu biết sâu và chính xác
+- Theo dõi cách các đội khác trả lời và nghe giải thích sau mỗi vòng giúp phát hiện ra những lỗ hổng kiến thức mà bản thân chưa nhận ra
 
-#### Chuyển đổi sang kiến trúc ứng dụng mới - Microservice Architecture
-
-Chuyển đổi thành hệ thống modular – từng chức năng là một **dịch vụ độc lập** giao tiếp với nhau qua **sự kiện** với 3 trụ cột cốt lõi:
-
-- **Queue Management**: Xử lý tác vụ bất đồng bộ
-- **Caching Strategy:** Tối ưu performance
-- **Message Handling:** Giao tiếp linh hoạt giữa services
-
-#### Domain-Driven Design (DDD)
-
-- **Phương pháp 4 bước**: Xác định domain events → sắp xếp timeline → identify actors → xác định bounded contexts
-- **Case study bookstore**: Minh họa cách áp dụng DDD thực tế
-- **Context mapping**: 7 patterns tích hợp bounded contexts
-
-#### Event-Driven Architecture
-
-- **3 patterns tích hợp**: Publish/Subscribe, Point-to-point, Streaming
-- **Lợi ích**: Loose coupling, scalability, resilience
-- **So sánh sync vs async**: Hiểu rõ trade-offs (sự đánh đổi)
-
-#### Compute Evolution
-
-- **Shared Responsibility Model**: Từ EC2 → ECS → Fargate → Lambda
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value
-- **Functions vs Containers**: Criteria lựa chọn phù hợp
-
-#### Amazon Q Developer
-
-- **SDLC automation**: Từ planning đến maintenance
-- **Code transformation**: Java upgrade, .NET modernization
-- **AWS Transform agents**: VMware, Mainframe, .NET migration
+---
 
 ### Những Gì Học Được
 
-#### Tư Duy Thiết Kế
+- **Củng cố nền tảng AWS:** Áp lực thi đấu buộc tôi phải nhớ lại và áp dụng nhanh các khái niệm cốt lõi của AWS, thay vì chỉ đọc tài liệu một cách thụ động.
+- **Học từ các đội khác:** Quan sát cách tiếp cận của các nhóm khác không kém phần giá trị so với phần giải thích chính thức — điều này cho thấy có nhiều cách hợp lệ để thiết kế một giải pháp cloud.
+- **Nhận ra điểm yếu kiến thức:** Một số câu hỏi về tối ưu chi phí và thiết kế đa vùng (multi-region) đã cho thấy những mảng tôi cần nghiên cứu sâu hơn.
+- **Làm việc nhóm dưới áp lực:** Dù bị hạn chế thời gian, nhóm vẫn phải giao tiếp rõ ràng và đi đến đồng thuận — điều này phản ánh đúng cách ra quyết định kiến trúc trong môi trường làm việc thực tế.
 
-- **Business-first approach**: Luôn bắt đầu từ business domain, không phải technology
-- **Ubiquitous language**: Importance của common vocabulary giữa business và tech teams
-- **Bounded contexts**: Cách identify và manage complexity trong large systems
+---
 
-#### Kiến Trúc Kỹ Thuật
+### Cảm Nhận Cá Nhân
 
-- **Event storming technique**: Phương pháp thực tế để mô hình hóa quy trình kinh doanh
-- Sử dụng **Event-driven communication** thay vì synchronous calls
-- **Integration patterns**: Hiểu khi nào dùng sync, async, pub/sub, streaming
-- **Compute spectrum**: Criteria chọn từ VM → containers → serverless
+Cloud Architect Challenge là một cách khởi đầu thú vị và kích thích tư duy cho chương trình FCAJ. Khác với các buổi ôn tập lý thuyết thông thường, hình thức thi đấu cạnh tranh tạo ra sự khẩn cấp khiến mỗi câu hỏi trở nên có ý nghĩa hơn.
 
-#### Chiến Lược Hiện Đại Hóa
+Điều ấn tượng nhất là những phần giải thích sau mỗi vòng — đây thường là lúc bổ ích nhất, vì chúng không chỉ cho biết đáp án đúng là gì mà còn lý giải *tại sao*, bao gồm cả lý do kiến trúc và những đánh đổi cần cân nhắc.
 
-- **Phased approach**: Không rush, phải có roadmap rõ ràng
-- **7Rs framework**: Nhiều con đường khác nhau tùy thuộc vào đặc điểm của mỗi ứng dụng
-- **ROI measurement**: Cost reduction + business agility
+Sau sự kiện, tôi có thêm động lực để tìm hiểu sâu hơn về những dịch vụ AWS mà bản thân mới chỉ biết ở mức bề mặt — đặc biệt là về networking, quản lý chi phí và các mô hình serverless.
 
-### Ứng Dụng Vào Công Việc
+---
 
-- **Áp dụng DDD** cho project hiện tại: Event storming sessions với business team
-- **Refactor microservices**: Sử dụng bounded contexts để identify service boundaries
-- **Implement event-driven patterns**: Thay thế một số sync calls bằng async messaging
-- **Serverless adoption**: Pilot AWS Lambda cho một số use cases phù hợp
-- **Try Amazon Q Developer**: Integrate vào development workflow để boost productivity
+### Một Số Hình Ảnh Tại Sự Kiện
 
-### Trải nghiệm trong event
+![Cloud Architect Challenge — Các đội tham gia thi đấu tập trung](/images/4-EventParticipated/event1-cloud-architect.png)
 
-Tham gia workshop **“GenAI-powered App-DB Modernization”** là một trải nghiệm rất bổ ích, giúp tôi có cái nhìn toàn diện về cách hiện đại hóa ứng dụng và cơ sở dữ liệu bằng các phương pháp và công cụ hiện đại. Một số trải nghiệm nổi bật:
+*Hình 1: Các đội tập trung tham gia Cloud Architect Challenge tại văn phòng AWS Việt Nam.*
 
-#### Học hỏi từ các diễn giả có chuyên môn cao
-- Các diễn giả đến từ AWS và các tổ chức công nghệ lớn đã chia sẻ **best practices** trong thiết kế ứng dụng hiện đại.
-- Qua các case study thực tế, tôi hiểu rõ hơn cách áp dụng **Domain-Driven Design (DDD)** và **Event-Driven Architecture** vào các project lớn.
+---
 
-#### Trải nghiệm kỹ thuật thực tế
-- Tham gia các phiên trình bày về **event storming** giúp tôi hình dung cách **mô hình hóa quy trình kinh doanh** thành các domain events.
-- Học cách **phân tách microservices** và xác định **bounded contexts** để quản lý sự phức tạp của hệ thống lớn.
-- Hiểu rõ trade-offs giữa **synchronous và asynchronous communication** cũng như các pattern tích hợp như **pub/sub, point-to-point, streaming**.
-
-#### Ứng dụng công cụ hiện đại
-- Trực tiếp tìm hiểu về **Amazon Q Developer**, công cụ AI hỗ trợ SDLC từ lập kế hoạch đến maintenance.
-- Học cách **tự động hóa code transformation** và pilot serverless với **AWS Lambda**, từ đó nâng cao năng suất phát triển.
-
-#### Kết nối và trao đổi
-- Workshop tạo cơ hội trao đổi trực tiếp với các chuyên gia, đồng nghiệp và team business, giúp **nâng cao ngôn ngữ chung (ubiquitous language)** giữa business và tech.
-- Qua các ví dụ thực tế, tôi nhận ra tầm quan trọng của **business-first approach**, luôn bắt đầu từ nhu cầu kinh doanh thay vì chỉ tập trung vào công nghệ.
-
-#### Bài học rút ra
-- Việc áp dụng DDD và event-driven patterns giúp giảm **coupling**, tăng **scalability** và **resilience** cho hệ thống.
-- Chiến lược hiện đại hóa cần **phased approach** và đo lường **ROI**, không nên vội vàng chuyển đổi toàn bộ hệ thống.
-- Các công cụ AI như Amazon Q Developer có thể **boost productivity** nếu được tích hợp vào workflow phát triển hiện tại.
-
-#### Một số hình ảnh khi tham gia sự kiện
-* Thêm các hình ảnh của các bạn tại đây
-> Tổng thể, sự kiện không chỉ cung cấp kiến thức kỹ thuật mà còn giúp tôi thay đổi cách tư duy về thiết kế ứng dụng, hiện đại hóa hệ thống và phối hợp hiệu quả hơn giữa các team.
+> Nhìn chung, Cloud Architect Challenge là lời nhắc nhở rằng kiến thức về cloud được kiểm tra tốt nhất — và được ghi nhớ lâu nhất — khi được áp dụng trong các điều kiện có áp lực thực sự, dù áp lực đó chỉ là từ một cuộc thi thân thiện.
