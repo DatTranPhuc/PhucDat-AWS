@@ -55,6 +55,21 @@ Một IAM role có thể được tạo cho EC2 bằng cách chọn **AWS servic
 
 ![IAM EC2 role](/images/5-Workshop/5.3-EC2/iam-ec2-role.png)
 
-#### Tổng kết phần EC2
+#### Kiểm tra & Xác minh
 
-Kết thúc phần này, EC2 instance đã hoạt động và được chuẩn bị sẵn sàng cho khối lượng công việc của ứng dụng. Ứng dụng chạy trên cổng **8080**, đây là cổng sẽ được sử dụng sau này khi đăng ký instance vào target group của load balancer.
+Sau khi khởi chạy container bằng Docker Compose, xác minh ứng dụng hoạt động bình thường bằng cách chạy lệnh curl hoặc mở trình duyệt:
+
+```bash
+curl -i http://localhost:8080/actuator/health
+```
+
+Kết quả phản hồi mong đợi (`HTTP/1.1 200 OK`):
+```json
+{
+  "status": "UP"
+}
+```
+
+#### Tóm tắt phần EC2
+
+Kết thúc phần này, EC2 instance đã hoạt động và sẵn sàng cho ứng dụng. Ứng dụng chạy trên cổng **8080**, là cổng sẽ được sử dụng sau này khi đăng ký máy chủ vào target group của bộ cân bằng tải.

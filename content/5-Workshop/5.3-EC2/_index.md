@@ -55,6 +55,21 @@ An IAM role can be created for EC2 by selecting **AWS service** as the trusted e
 
 ![IAM EC2 role](/images/5-Workshop/5.3-EC2/iam-ec2-role.png)
 
+#### Test & Validation
+
+After starting the container via Docker Compose, verify that the application is healthy by running a curl command or opening the browser:
+
+```bash
+curl -i http://localhost:8080/actuator/health
+```
+
+Expected response (`HTTP/1.1 200 OK`):
+```json
+{
+  "status": "UP"
+}
+```
+
 #### EC2 summary
 
 At the end of this section, the EC2 instance is running and prepared for the application workload. The application runs on port **8080**, which is the port used later when registering the instance into the load balancer target group.

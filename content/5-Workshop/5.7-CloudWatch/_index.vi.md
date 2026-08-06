@@ -6,27 +6,27 @@ chapter: false
 pre: "<b> 5.7. </b>"
 ---
 
-# Giám sát log ứng dụng EC2 bằng Amazon CloudWatch
+# Giám Sát Log Ứng Dụng EC2 với Amazon CloudWatch
 
 #### Tổng quan
 
-Amazon CloudWatch được sử dụng để thu thập, lưu trữ và theo dõi dữ liệu vận hành được tạo ra từ các tài nguyên và ứng dụng trên AWS. Trong phần triển khai này, CloudWatch Logs được cấu hình để tập trung log của ứng dụng **CenFra-MS** đang chạy trên một Amazon EC2 instance.
+Amazon CloudWatch được sử dụng để thu thập, lưu trữ và xem xét dữ liệu vận hành do các tài nguyên AWS và ứng dụng tạo ra. Trong triển khai này, CloudWatch Logs được cấu hình để tập trung hóa log của ứng dụng **CenFra-MS** đang chạy trên một máy chủ Amazon EC2.
 
-Quy trình cấu hình gồm các công việc chính sau:
+Các nhiệm vụ chính trong triển khai này bao gồm:
 
-- Tạo IAM Role dành cho Amazon EC2.
-- Gắn policy `CloudWatchAgentServerPolicy`.
-- Gắn IAM Role vào EC2 instance.
-- Tạo CloudWatch Log Group và Log Stream.
-- Kiểm tra log của ứng dụng đã được gửi thành công lên CloudWatch Logs.
+- Tạo IAM role cho Amazon EC2.
+- Gắn managed policy `CloudWatchAgentServerPolicy`.
+- Gán IAM role cho EC2 instance.
+- Tạo CloudWatch log group và log stream.
+- Xác minh rằng log của ứng dụng được gửi thành công đến CloudWatch Logs.
 
-Luồng hoạt động của hệ thống:
+Luồng cấu hình được thể hiện dưới đây:
 
 ```text
 Ứng dụng CenFra-MS trên EC2
             |
             v
-IAM Role có CloudWatchAgentServerPolicy
+IAM role với CloudWatchAgentServerPolicy
             |
             v
 CloudWatch Log Group: ec2-c8n-clW
@@ -39,36 +39,34 @@ Các sự kiện log của ứng dụng
 ```
 
 {{% notice info %}}
-EC2 instance và các tài nguyên CloudWatch trong bài được cấu hình tại Region **US West (Oregon)**, mã Region là `us-west-2`. IAM là dịch vụ toàn cục, trong khi EC2 và CloudWatch là các dịch vụ phụ thuộc Region.
+EC2 instance và các tài nguyên CloudWatch trong bài lab này được cấu hình ở Region **US West (Oregon)** (`us-west-2`). IAM là một dịch vụ toàn cầu của AWS, trong khi các tài nguyên EC2 và CloudWatch mang tính riêng biệt theo từng Region.
 {{% /notice %}}
 
 ---
 
-## 1. Tạo IAM Role cho Amazon EC2
+## 1. Tạo IAM role cho Amazon EC2
 
-Truy cập AWS Management Console và đi đến:
+Mở AWS Management Console và truy cập:
 
 ```text
 IAM → Roles → Create role
 ```
 
-Tại mục **Trusted entity type**, chọn **AWS service**.
+Tại mục **Trusted entity type**, chọn **AWS service**. Tại mục **Service or use case**, chọn **EC2**, sau đó chọn use case **EC2**.
 
-Trong phần **Service or use case**, chọn **EC2**, sau đó tiếp tục chọn trường hợp sử dụng **EC2**.
-
-Việc cấu hình trusted entity cho phép dịch vụ Amazon EC2 đảm nhận IAM Role và sử dụng các quyền được gắn với role đó.
+Mối quan hệ tin cậy này cho phép dịch vụ EC2 đảm nhận (assume) IAM role và sử dụng các quyền hạn được gắn kèm.
 
 ![Chọn Amazon EC2 làm trusted entity](/images/5-Workshop/cloudwatch/01-select-trusted-entity.png)
 
-*Hình 1: Chọn Amazon EC2 làm trusted entity cho IAM Role.*
+*Hình 1: Chọn Amazon EC2 làm trusted entity cho IAM role.*
 
-Chọn **Next** để chuyển sang bước cấu hình quyền.
+Chọn **Next** để tiếp tục đến cấu hình quyền hạn.
 
 ---
 
-## 2. Gắn quyền CloudWatch cho IAM Role
+## 2. Gắn quyền CloudWatch
 
-Tại trang **Add permissions**, chọn **Use existing policy** và tìm kiếm policy:
+Trên trang **Add permissions**, chọn **Use existing policy** và tìm kiếm:
 
 ```text
 CloudWatchAgentServerPolicy
@@ -78,19 +76,19 @@ Chọn AWS-managed policy có tên `CloudWatchAgentServerPolicy`.
 
 ![Gắn CloudWatchAgentServerPolicy](/images/5-Workshop/cloudwatch/02-add-cloudwatch-policy.png)
 
-*Hình 2: Gắn CloudWatchAgentServerPolicy vào IAM Role.*
+*Hình 2: Gắn AWS-managed policy CloudWatchAgentServerPolicy.*
 
-Policy này cung cấp các quyền cần thiết để CloudWatch Agent chạy trên EC2 instance có thể gửi metric và log của ứng dụng lên Amazon CloudWatch.
+Policy này cung cấp các quyền cần thiết cho CloudWatch agent chạy trên EC2 instance để xuất dữ liệu giám sát và log ứng dụng lên Amazon CloudWatch.
 
-Sau khi chọn policy, nhấn **Next**.
+Chọn **Next** sau khi chọn policy.
 
 ---
 
-## 3. Kiểm tra và tạo IAM Role
+## 3. Xem lại và tạo IAM role
 
-Tại bước cuối, kiểm tra lại trusted entity và permission policy.
+Trang cuối cùng, xem lại trusted entity và permission policy.
 
-Trust policy cho phép dịch vụ Amazon EC2 đảm nhận role:
+Trust policy xác định Amazon EC2 là principal có thể assume role:
 
 ```json
 {
@@ -107,27 +105,23 @@ Trust policy cho phép dịch vụ Amazon EC2 đảm nhận role:
 }
 ```
 
-Kiểm tra trong phần permission policy summary phải có policy:
+Xác nhận rằng `CloudWatchAgentServerPolicy` xuất hiện trong bản tóm tắt quyền hạn.
 
-```text
-CloudWatchAgentServerPolicy
-```
+![Xem lại cấu hình IAM role](/images/5-Workshop/cloudwatch/03-review-iam-role.png)
 
-![Kiểm tra cấu hình IAM Role](/images/5-Workshop/cloudwatch/03-review-iam-role.png)
+*Hình 3: Xem lại EC2 trust policy và CloudWatch permission policy.*
 
-*Hình 3: Kiểm tra EC2 trust policy và CloudWatch permission policy.*
-
-IAM Role được sử dụng trong bài có tên:
+IAM role được sử dụng trong triển khai này có tên:
 
 ```text
 ec2-cloudWatch
 ```
 
-Chọn **Create role** để hoàn tất việc tạo IAM Role.
+Chọn **Create role** để hoàn tất cấu hình IAM role.
 
 ---
 
-## 4. Gắn IAM Role vào EC2 instance
+## 4. Gắn IAM role vào EC2 instance
 
 Truy cập:
 
@@ -135,35 +129,35 @@ Truy cập:
 EC2 → Instances
 ```
 
-Chọn EC2 instance đang chạy ứng dụng. Trong bài này, instance có tên **CenFra-MS**.
+Chọn EC2 instance chạy ứng dụng. Trong triển khai này, tên instance là **CenFra-MS**.
 
-Tại menu của instance, chọn:
+Từ menu của instance, chọn:
 
 ```text
 Actions → Security → Modify IAM role
 ```
 
-![Mở chức năng Modify IAM role](/images/5-Workshop/cloudwatch/04-modify-iam-role-menu.png)
+![Mở tùy chọn Modify IAM role](/images/5-Workshop/cloudwatch/04-modify-iam-role-menu.png)
 
-*Hình 4: Mở chức năng Modify IAM role trên trang quản lý EC2 instance.*
+*Hình 4: Mở tùy chọn Modify IAM role từ trang EC2 instance.*
 
-Tại trang **Modify IAM role**, chọn role vừa tạo:
+Trên trang **Modify IAM role**, chọn role đã tạo trước đó:
 
 ```text
 ec2-cloudWatch
 ```
 
-![Chọn IAM Role CloudWatch](/images/5-Workshop/cloudwatch/05-select-iam-role.png)
+![Chọn CloudWatch IAM role](/images/5-Workshop/cloudwatch/05-select-iam-role.png)
 
-*Hình 5: Chọn IAM Role ec2-cloudWatch cho EC2 instance CenFra-MS.*
+*Hình 5: Chọn role ec2-cloudWatch cho instance CenFra-MS.*
 
-Nhấn **Update IAM role** để hoàn tất.
+Chọn **Update IAM role**.
 
-Sau khi role được gắn, các ứng dụng hoặc monitoring agent chạy trên instance có thể nhận temporary credentials thông qua EC2 instance profile. Vì vậy, không cần lưu AWS Access Key trực tiếp trên máy chủ.
+Sau khi cập nhật, ứng dụng hoặc agent giám sát chạy trên instance có thể lấy temporary credentials thông qua EC2 instance profile. Do đó, không cần lưu trữ trực tiếp access keys lâu dài trên máy chủ.
 
 ---
 
-## 5. Tạo CloudWatch Log Group
+## 5. Tạo CloudWatch log group
 
 Mở Amazon CloudWatch và truy cập:
 
@@ -171,144 +165,122 @@ Mở Amazon CloudWatch và truy cập:
 CloudWatch → Logs → Log management → Create log group
 ```
 
-Cấu hình Log Group với các giá trị sau:
+Cấu hình log group với các giá trị sau:
 
-| Thuộc tính | Giá trị |
+| Thiết lập | Giá trị |
 |---|---|
 | Log group name | `ec2-c8n-clW` |
 | Retention setting | `1 day` |
 | Log class | `Standard` |
 | KMS key | Không cấu hình |
-| Deletion protection | Tắt |
+| Deletion protection | Disabled |
 
-![Tạo CloudWatch Log Group](/images/5-Workshop/cloudwatch/06-create-log-group.png)
+![Tạo CloudWatch log group](/images/5-Workshop/cloudwatch/06-create-log-group.png)
 
-*Hình 6: Tạo CloudWatch Log Group có tên ec2-c8n-clW.*
+*Hình 6: Tạo CloudWatch log group ec2-c8n-clW.*
 
-Thời gian lưu trữ log được đặt là một ngày vì đây là môi trường thực hành. Thiết lập này giúp các log thử nghiệm không bị lưu quá lâu và hạn chế chi phí không cần thiết.
+Thời gian lưu trữ 1 ngày được chọn cho môi trường thử nghiệm để tránh lưu trữ log thử nghiệm lâu hơn mức cần thiết. Đối với môi trường sản xuất, thời gian lưu trữ nên được chọn theo yêu cầu vận hành, tuân thủ và chi phí.
 
-Trong môi trường production, thời gian lưu log nên được lựa chọn dựa trên yêu cầu vận hành, bảo mật, tuân thủ và chi phí.
-
-Nhấn **Create** để tạo Log Group.
+Chọn **Create** để tạo log group.
 
 ---
 
-## 6. Tạo Log Stream
+## 6. Tạo log stream
 
-Mở Log Group vừa tạo và chọn **Create log stream**.
+Mở log group vừa tạo và chọn **Create log stream**.
 
-Nhập tên Log Stream:
+Nhập tên log stream sau:
 
 ```text
 cenfra-app
 ```
 
-![Tạo Log Stream cho ứng dụng](/images/5-Workshop/cloudwatch/07-create-log-stream.png)
+![Tạo log stream cho ứng dụng](/images/5-Workshop/cloudwatch/07-create-log-stream.png)
 
-*Hình 7: Tạo Log Stream cenfra-app.*
+*Hình 7: Tạo cenfra-app log stream.*
 
-Log Group là nơi tập hợp các log thuộc cùng một ứng dụng hoặc workload.
+Log group là container chứa các log thuộc về cùng một ứng dụng hoặc workload. Log stream đại diện cho một chuỗi các sự kiện log từ một nguồn cụ thể, chẳng hạn như một EC2 instance, container, quy trình ứng dụng hoặc file log.
 
-Log Stream đại diện cho chuỗi các log event được gửi từ một nguồn cụ thể, ví dụ:
-
-- Một EC2 instance.
-- Một container.
-- Một tiến trình ứng dụng.
-- Một file log trên máy chủ.
-
-Nhấn **Create** để hoàn tất việc tạo Log Stream.
+Chọn **Create** để hoàn tất cấu hình log stream.
 
 ---
 
-## 7. Kiểm tra Log Group và Log Stream
+## 7. Xác minh log group và log stream
 
-Quay lại Log Group:
+Quay lại log group `ec2-c8n-clW`.
 
-```text
-ec2-c8n-clW
-```
-
-Trong phần **Log streams**, kiểm tra Log Stream:
+Mục **Log streams** sẽ hiển thị stream mới được tạo:
 
 ```text
 cenfra-app
 ```
 
-![Kiểm tra Log Stream](/images/5-Workshop/cloudwatch/08-verify-log-stream.png)
+![Xác minh log stream](/images/5-Workshop/cloudwatch/08-verify-log-stream.png)
 
-*Hình 8: Kiểm tra Log Stream cenfra-app đã được tạo và nhận dữ liệu.*
+*Hình 8: Xác minh cenfra-app log stream có sẵn.*
 
-Nếu cột **Last event time** hiển thị thời gian gần nhất, điều đó cho thấy CloudWatch đã nhận được log event từ ứng dụng.
+Sự xuất hiện của giá trị gần đây trong cột **Last event time** cho biết CloudWatch đã nhận được các sự kiện log cho stream.
 
 ---
 
-## 8. Kiểm tra log của ứng dụng
+## 8. Xem xét các sự kiện log của ứng dụng
 
-Mở Log Stream `cenfra-app` để xem các log event đã được thu thập.
+Mở log stream `cenfra-app` để kiểm tra các sự kiện thu thập được.
 
-Log Stream hiển thị thông tin khởi động và hoạt động của ứng dụng Spring Boot, bao gồm:
+Log stream chứa thông tin khởi động và runtime từ ứng dụng Spring Boot, bao gồm:
 
-- Quá trình khởi động ứng dụng Spring Boot.
-- Tomcat được khởi động trên port `8080`.
-- Spring Data JPA khởi tạo các repository.
-- HikariCP khởi tạo database connection pool.
-- Thông tin PostgreSQL JDBC Driver.
-- Quá trình khởi tạo Hibernate.
+- Khởi tạo ứng dụng Spring Boot.
+- Khởi động Embedded Tomcat trên cổng `8080`.
+- Khởi tạo Spring Data JPA repository.
+- Khởi động HikariCP database connection pool.
+- Thông tin PostgreSQL JDBC driver và cơ sở dữ liệu.
+- Khởi tạo Hibernate.
 - Cấu hình Spring Security.
-- Quá trình khởi tạo các endpoint của ứng dụng.
+- Khởi tạo các endpoint ứng dụng.
 
-![Kiểm tra log khởi động Spring Boot](/images/5-Workshop/cloudwatch/09-spring-boot-log-events.png)
+![Xem log khởi động Spring Boot](/images/5-Workshop/cloudwatch/09-spring-boot-log-events.png)
 
-*Hình 9: Các sự kiện khởi động của Spring Boot được gửi đến CloudWatch Logs.*
+*Hình 9: Các sự kiện khởi động Spring Boot được gửi đến CloudWatch Logs.*
 
-Các sự kiện tiếp theo cho thấy ứng dụng đã kết nối với PostgreSQL và hoàn tất quá trình khởi tạo.
+Các sự kiện bổ sung xác nhận rằng ứng dụng đã kết nối với PostgreSQL và hoàn thành quá trình khởi tạo.
 
-![Kiểm tra log cơ sở dữ liệu và ứng dụng](/images/5-Workshop/cloudwatch/10-application-log-events.png)
+![Xem các sự kiện ứng dụng và cơ sở dữ liệu](/images/5-Workshop/cloudwatch/10-application-log-events.png)
 
-*Hình 10: Log của PostgreSQL, Hibernate, Tomcat và ứng dụng trên CloudWatch Logs.*
+*Hình 10: Các sự kiện Database, Hibernate, Tomcat và ứng dụng trong CloudWatch Logs.*
 
-Tại trang Log Events, có thể thực hiện các thao tác:
+Trang xem sự kiện log cũng có thể được sử dụng để:
 
-- Tìm kiếm các từ khóa như `ERROR`, `WARN` hoặc tên exception.
-- Lọc sự kiện theo khoảng thời gian.
-- Theo dõi log mới gần thời gian thực bằng **Start tailing**.
-- Phân tích log nâng cao bằng CloudWatch Logs Insights.
-- Tạo metric filter từ các mẫu log.
-- Dùng metric filter để tạo CloudWatch Alarm.
+- Tìm kiếm các từ khóa như `ERROR`, `WARN`, hoặc tên exception.
+- Lọc sự kiện theo khoảng thời gian tùy chỉnh.
+- Xem trực tiếp (tail) các sự kiện mới theo thời gian thực.
+- Mở log group trong CloudWatch Logs Insights để truy vấn nâng cao.
+- Tạo metric filter từ các mẫu log khớp.
 
 ---
 
 ## Kết quả
 
-Amazon CloudWatch Logs đã được cấu hình thành công cho EC2 workload **CenFra-MS**.
+Amazon CloudWatch Logs đã được cấu hình thành công cho workload EC2 **CenFra-MS**.
 
-Sau khi hoàn thành, hệ thống đạt được các kết quả sau:
+Thiết lập hoàn chỉnh mang lại các kết quả sau:
 
-1. EC2 instance có IAM Role với quyền gửi dữ liệu giám sát lên CloudWatch.
-2. IAM Role `ec2-cloudWatch` đã được gắn vào instance `CenFra-MS`.
-3. Log Group `ec2-c8n-clW` được sử dụng để lưu log của ứng dụng.
-4. Log Stream `cenfra-app` đã nhận được các log event.
-5. Có thể kiểm tra các log liên quan đến Spring Boot, Tomcat, Hibernate và PostgreSQL trực tiếp trên AWS Management Console.
+1. EC2 instance có một IAM role với quyền xuất dữ liệu giám sát.
+2. IAM role được gắn vào instance `CenFra-MS`.
+3. Log group CloudWatch `ec2-c8n-clW` lưu trữ các log của ứng dụng.
+4. Log stream `cenfra-app` nhận các sự kiện từ ứng dụng.
+5. Các sự kiện liên quan đến Spring Boot, Tomcat, Hibernate và PostgreSQL có thể được xem từ AWS Management Console.
 
-Việc tập trung log trên CloudWatch giúp quá trình giám sát và xử lý lỗi thuận tiện hơn mà không cần liên tục kết nối trực tiếp vào EC2 instance.
-
-Các log này cũng có thể được sử dụng để xây dựng:
-
-- CloudWatch Logs Insights query.
-- Metric Filter.
-- CloudWatch Dashboard.
-- CloudWatch Alarm.
-- Amazon SNS notification.
+Tập trung hóa log trong CloudWatch giúp khắc phục sự cố ứng dụng dễ dàng hơn mà không cần liên tục kết nối trực tiếp vào máy chủ EC2. Các sự kiện thu thập được sau này có thể được dùng với Logs Insights, metric filters, dashboards, alarms và các dịch vụ thông báo để xây dựng giải pháp giám sát hoàn chỉnh hơn.
 
 ---
 
-## Lưu ý khi triển khai trong môi trường production
+## Ghi chú cho triển khai sản xuất (Production)
 
-Khi áp dụng cho môi trường production, nên cân nhắc các điểm sau:
+Đối với môi trường sản xuất, hãy cân nhắc các cải tiến sau:
 
-- Áp dụng nguyên tắc **least privilege** cho IAM Role.
-- Thiết lập thời gian lưu log phù hợp với yêu cầu của hệ thống.
-- Sử dụng AWS KMS nếu cần quản lý khóa mã hóa riêng cho log.
-- Tạo metric filter cho các mẫu quan trọng như `ERROR`, `WARN` hoặc đăng nhập thất bại.
-- Tạo CloudWatch Alarm và Amazon SNS notification cho các sự cố nghiêm trọng.
-- Không ghi password, token, connection string hoặc dữ liệu nhạy cảm vào log.
+- Áp dụng nguyên tắc quyền tối thiểu (least privilege) thay vì cấp các quyền không cần thiết.
+- Cấu hình thời gian lưu trữ (retention) phù hợp với yêu cầu của tổ chức.
+- Sử dụng mã hóa AWS KMS khi cần bổ sung kiểm soát mã hóa log.
+- Thêm CloudWatch metric filters cho các mẫu quan trọng như `ERROR` và các lần xác thực thất bại.
+- Tạo CloudWatch alarm và thông báo Amazon SNS cho các điều kiện quan trọng.
+- Tránh ghi mật khẩu, token, chuỗi kết nối hoặc thông tin nhạy cảm khác vào log ứng dụng.

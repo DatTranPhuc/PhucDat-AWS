@@ -20,7 +20,21 @@ AWS Shield Advanced vừa bổ sung tính năng **attack flow logs** — cho ph�
 
 **Các trường log quan trọng:** `srcaddr`, `dstaddr`, `tcp_flags`, `action` (Block/Allow), `srccountry`.
 
-**Triển khai qua AWS CLI** với 4 bước: `list-protections` → `put-delivery-source` → `put-delivery-destination` → `create-delivery`.
+**Triển khai qua AWS CLI** với 4 bước: `list-protections` → `put-delivery-source` → `put-delivery-destination` → `create-delivery`:
+
+```bash
+# 1. Lấy ARN của Shield Protection
+aws shield list-protections
+
+# 2. Đăng ký nguồn phân phối (Delivery Source)
+aws logs put-delivery-source --name ShieldProtectionSource --resource-arn <SHIELD_PROTECTION_ARN> --log-event-type DDoSAttackFlowLogs
+
+# 3. Đăng ký điểm đến (Delivery Destination - S3 Bucket)
+aws logs put-delivery-destination --name ShieldLogsDestination --delivery-destination-configuration destinationResourceArn=<S3_BUCKET_ARN>
+
+# 4. Tạo kênh phân phối (Delivery Channel)
+aws logs create-delivery --delivery-source-name ShieldProtectionSource --delivery-destination-name ShieldLogsDestination
+```
 
 Điểm nổi bật: hỗ trợ **cross-account & cross-region centralization** — gom log từ nhiều AWS account về một S3 bucket trung tâm để phân tích bằng Athena + QuickSight, không cần cài Agent.
 

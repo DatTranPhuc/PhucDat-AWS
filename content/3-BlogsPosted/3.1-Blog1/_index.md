@@ -20,7 +20,21 @@ AWS Shield Advanced introduced **attack flow logs** — capturing packet-level d
 
 **Key log fields:** `srcaddr`, `dstaddr`, `tcp_flags`, `action` (Block/Allow), `srccountry`.
 
-**AWS CLI deployment** in 4 steps: `list-protections` → `put-delivery-source` → `put-delivery-destination` → `create-delivery`.
+**AWS CLI deployment** in 4 steps: `list-protections` → `put-delivery-source` → `put-delivery-destination` → `create-delivery`:
+
+```bash
+# 1. Get Shield Protection ARN
+aws shield list-protections
+
+# 2. Register Delivery Source
+aws logs put-delivery-source --name ShieldProtectionSource --resource-arn <SHIELD_PROTECTION_ARN> --log-event-type DDoSAttackFlowLogs
+
+# 3. Register Delivery Destination (S3)
+aws logs put-delivery-destination --name ShieldLogsDestination --delivery-destination-configuration destinationResourceArn=<S3_BUCKET_ARN>
+
+# 4. Create Delivery Channel
+aws logs create-delivery --delivery-source-name ShieldProtectionSource --delivery-destination-name ShieldLogsDestination
+```
 
 Highlight: supports **cross-account & cross-region centralization** — aggregating logs from multiple AWS accounts into a central S3 bucket for analysis with Athena + QuickSight, no Agent required.
 

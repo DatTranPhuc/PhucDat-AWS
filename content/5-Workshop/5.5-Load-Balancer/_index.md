@@ -58,6 +58,23 @@ After creation, the EC2 console shows **c8n-aws-ALB** with the **Active** state.
 
 ![Active ALB](/images/5-Workshop/5.4-Load-Balancer/alb-active.png)
 
+#### Test & Validation
+
+Once the Application Load Balancer status reaches **Active**, verify that traffic can reach the backend by opening the ALB DNS name in your browser or executing a curl request:
+
+```bash
+curl -i http://<your-alb-dns-name>.elb.amazonaws.com/actuator/health
+```
+
+Expected response (`HTTP/1.1 200 OK`):
+```json
+{
+  "status": "UP"
+}
+```
+
+This confirms that the ALB listener on port 80 successfully routes HTTP requests to target group `aws-c8n` on port 8080.
+
 #### Load Balancer summary
 
 At the end of this section, the Application Load Balancer is active and ready to route public HTTP traffic to the healthy EC2 backend target. This architecture separates the public entry point from the backend application instance and improves availability by using multiple Availability Zones.

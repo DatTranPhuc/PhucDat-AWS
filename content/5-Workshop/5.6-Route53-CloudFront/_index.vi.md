@@ -2,176 +2,176 @@
 title : "Tích hợp Route 53 & CloudFront CDN"
 date : 2024-01-01 
 weight : 6 
-chapter : false
+5: chapter : false
 pre : " <b> 5.6. </b> "
 ---
 
 #### Bước 1: Cấu hình Route 53 Hosted Zone
 
-1. Tại **Route 53 Console**, chọn mục **Hosted zones** và chọn **Create hosted zone**.
-2. Nhập tên miền tùy chỉnh của bạn (ví dụ: `tuandat.space`), đặt loại là **Public hosted zone** và chọn **Create**.
-3. Cập nhật các bản ghi Name Servers (NS) do Route 53 cung cấp lên trình quản lý tên miền của nhà đăng ký của bạn.
+1. Trong **Route 53 Console**, chọn **Hosted zones** và nhấn **Create hosted zone**.
+2. Nhập tên tên miền tùy chỉnh của bạn (ví dụ: `tuandat.space`), đặt Type là **Public hosted zone**, và nhấn **Create**.
+3. Cập nhật các bản ghi Name Server (NS) tại nhà cung cấp tên miền của bạn với các AWS Name Server được liệt kê trong Route 53.
 
 ![Route 53 Hosted Zone](/images/5-Workshop/route53/Screenshot%202026-07-28%20113639.png)
 *Tạo Route 53 Hosted Zone.*
 
 ![Nhập tên Hosted Zone](/images/5-Workshop/route53/Screenshot%202026-07-28%20114628.png)
-*Nhập tên miền `tuandat.space` và chọn **Public hosted zone** trước khi tạo Hosted Zone.*
+*Nhập `tuandat.space`, chọn **Public hosted zone**, và tạo Hosted Zone.*
 
-![Cấu hình Nameserver trên Namecheap](/images/5-Workshop/route53/namecheap-route53-nameservers.png)
-*Tại Namecheap, chọn **Custom DNS** và thay nameserver bằng các nameserver `awsdns-*` do Route 53 cung cấp. Đây là bước ủy quyền DNS cho Route 53; không phải bản ghi CNAME của CloudFront.*
+![Cấu hình Nameservers trên Namecheap](/images/5-Workshop/route53/namecheap-route53-nameservers.png)
+*Trên Namecheap, chọn **Custom DNS** và thay thế nameservers bằng các nameserver `awsdns-*` được cung cấp bởi Route 53.*
 
-![Kiểm tra NS và SOA records](/images/5-Workshop/route53/Screenshot%202026-07-28%20114519.png)
-*Sau khi tạo Hosted Zone, kiểm tra hai record mặc định **NS** và **SOA**. Các nameserver trong record NS là nameserver cần dùng cho domain.*
+![Kiểm tra bản ghi NS và SOA](/images/5-Workshop/route53/Screenshot%202026-07-28%20114519.png)
+*Sau khi tạo Hosted Zone, xác minh các bản ghi mặc định **NS** và **SOA**.*
 
-![Giao diện thêm DNS record](/images/5-Workshop/route53/Screenshot%202026-07-28%20114945.png)
-*Giao diện Route 53 để chọn loại record và nhập thông tin DNS khi cần thêm record mới.*
-
----
-
-#### Bước 2: Yêu cầu chứng chỉ SSL ACM cấp phát HTTPS
-
-1. Truy cập **AWS Certificate Manager (ACM)** và bấm **Request certificate**.
-2. Chọn **Request a public certificate** và chọn **Next**.
-3. Nhập tên miền (ví dụ: `cenframs.tuandat.space` và tên miền phụ dạng wildcard `*.tuandat.space`).
-4. Chọn phương thức xác thực **DNS validation** và bấm **Request**.
-5. Sau khi yêu cầu được tạo, bấm vào chi tiết chứng chỉ và chọn **Create records in Route 53** để tự động cấu hình bản ghi xác thực tên miền.
+![Trình chỉnh sửa bản ghi DNS Route 53](/images/5-Workshop/route53/Screenshot%202026-07-28%20114945.png)
+*Sử dụng trình chỉnh sửa bản ghi Route 53 để chọn loại bản ghi và nhập giá trị DNS.*
 
 ---
 
-#### Bước 3: Cấu hình CloudFront Distribution
+#### Bước 2: Yêu cầu Chứng chỉ ACM cho HTTPS
 
-1. Mở **CloudFront Console** và bấm **Create distribution**.
-2. Tại phần **Origin domain**, chọn DNS của Application Load Balancer (ALB) đã tạo trước đó.
-3. Cấu hình hành vi cache (**Default cache behavior**):
-   * **Viewer protocol policy**: Chọn **Redirect HTTP to HTTPS** (để tự chuyển hướng bảo mật).
-   * **Allowed HTTP methods**: Chọn `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE` để hỗ trợ toàn bộ các phương thức gọi API REST.
-   * **Cache key and query requests**: Chọn **Cache policy: CachingDisabled** để đảm bảo CloudFront không cache dữ liệu API mà luôn chuyển tiếp request động về backend EC2.
-4. Cấu hình cài đặt nâng cao (**Settings**):
-   * Nhập tên miền phụ của bạn vào mục **Alternate domain name (CNAME)** (ví dụ: `cenframs.tuandat.space`).
-   * Chọn chứng chỉ bảo mật tương ứng trong mục **Custom SSL certificate** đã được ACM cấp phát.
-5. Bấm **Create distribution** và chờ cho trạng thái chuyển sang hoạt động (**Enabled**).
+1. Chuyển đến **AWS Certificate Manager (ACM)** và nhấn **Request certificate**.
+2. Chọn **Request a public certificate** và nhấn **Next**.
+3. Nhập tên miền của bạn (ví dụ: `cenframs.tuandat.space` và `*.tuandat.space`).
+4. Chọn phương thức xác thực **DNS validation** và nhấn **Request**.
+5. Sau khi yêu cầu, nhấn **Create records in Route 53** trong chi tiết tên miền để tự động xác thực quyền sở hữu.
 
-#### Bước 3.1: Bắt đầu tạo distribution
+---
 
-Chọn **Single website or app**. Đặt tên distribution để dễ quản lý, ví dụ `c8n-aws-clf`.
+#### Bước 3: Thiết lập CloudFront Distribution
+
+1. Mở **CloudFront Console** và nhấn **Create distribution**.
+2. Tại mục **Origin domain**, chọn tên DNS của Application Load Balancer.
+3. Tại mục **Default cache behavior**:
+   * Đặt **Viewer protocol policy** thành **Redirect HTTP to HTTPS**.
+   * Đặt **Allowed HTTP methods** thành `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE` (để hỗ trợ API).
+   * Tại mục **Cache key and query requests**, chọn **Cache policy: CachingDisabled** để đảm bảo các yêu cầu API được định tuyến động đến backend thay vì bị cache.
+4. Tại mục **Settings**:
+   * Thêm tên miền tùy chỉnh vào **Alternate domain name (CNAME)** (ví dụ: `cenframs.tuandat.space`).
+   * Trong **Custom SSL certificate**, chọn chứng chỉ ACM SSL đã yêu cầu ở bước trước.
+5. Nhấn **Create distribution** và chờ trạng thái chuyển sang **Enabled**.
+
+#### Bước 3.1: Khởi tạo distribution
+
+Chọn **Single website or app** và đặt tên rõ ràng cho distribution như `c8n-aws-clf`.
 
 ![Tạo CloudFront distribution](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20115634.png)
-*Màn hình khởi tạo distribution và đặt tên cho CloudFront.*
+*Tạo distribution và đặt tên.*
 
-#### Bước 3.2: Chọn Application Load Balancer làm origin
+#### Bước 3.2: Chọn Origin là Application Load Balancer
 
-Chọn **Elastic Load Balancer**, sau đó chọn đúng DNS của ALB đang forward tới Target Group backend. Không chọn S3 vì backend CenFra-MS là API chạy sau ALB.
+Chọn **Elastic Load Balancer** và chọn tên DNS của ALB đang chuyển tiếp lưu lượng đến Target Group backend. Không chọn S3 vì CenFra-MS là một API động đằng sau ALB.
 
-![Chọn loại origin là Elastic Load Balancer](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20115958.png)
-*CloudFront hỗ trợ nhiều loại origin; với backend này, origin là ALB.*
+![Chọn loại origin Elastic Load Balancer](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20115958.png)
+*Chọn ELB làm loại origin.*
 
 ![Nhập ALB origin](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120815.png)
-*Chọn Elastic Load Balancer và nhập DNS ALB, ví dụ `...elb.amazonaws.com`.*
+*Chọn ALB và nhập tên DNS `...elb.amazonaws.com`.*
 
-#### Bước 3.3: Cấu hình kết nối từ CloudFront đến ALB
+#### Bước 3.3: Cấu hình kết nối CloudFront đến ALB
 
-Với ALB đang lắng nghe HTTP port `80`, chọn **Customize origin settings**, **HTTP only**, port `80`. HTTPS phía người dùng vẫn được xử lý ở CloudFront; kết nối nội bộ CloudFront → ALB dùng HTTP theo cấu hình thực tế của workshop.
+Đối với ALB lắng nghe trên cổng HTTP `80`, chọn **Customize origin settings**, **HTTP only**, và cổng `80`. HTTPS của Viewer được chấm dứt tại CloudFront; kết nối từ CloudFront đến ALB tuân theo cấu hình HTTP ALB hiện tại.
 
-![Cấu hình origin settings](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120220.png)
-*Đặt protocol kết nối đến origin là HTTP only và port là 80.*
+![Cấu hình cài đặt origin](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120220.png)
+*Sử dụng HTTP only và cổng 80 cho kết nối origin.*
 
-![Kiểm tra origin connection settings](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120820.png)
-*Giữ Origin Shield tắt và kiểm tra timeout/connection settings trước khi chuyển sang cache behavior.*
+![Xem lại cài đặt kết nối origin](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120820.png)
+*Giữ Origin Shield tắt và xem lại các cài đặt kết nối.*
 
-#### Bước 3.4: Cấu hình HTTPS và phương thức API
+#### Bước 3.4: Cấu hình HTTPS và các phương thức API
 
-Chọn **Customize cache settings**, sau đó:
+Chọn **Customize cache settings**, sau đó thiết lập:
 
 * **Viewer protocol policy**: `Redirect HTTP to HTTPS`.
 * **Allowed HTTP methods**: `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`.
-* **Cache policy**: `CachingDisabled` vì API có JWT, dữ liệu động và dữ liệu theo user.
-* **Origin request policy**: `AllViewerExceptHostHeader` để chuyển tiếp query string, cookie và headers cần thiết nhưng loại Host header không phù hợp với ALB origin.
+* **Cache policy**: `CachingDisabled` vì API sử dụng JWT, dữ liệu động và phản hồi riêng cho từng người dùng.
+* **Origin request policy**: `AllViewerExceptHostHeader` để chuyển tiếp các tham số viewer cần thiết trong khi loại bỏ Host header không tương thích.
 
-![Viewer protocol và HTTP methods](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120433.png)
-*Bật chuyển hướng HTTP → HTTPS và cho phép toàn bộ method REST API.*
+![Chính sách giao thức Viewer và phương thức HTTP](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120433.png)
+*Chuyển hướng HTTP sang HTTPS và cho phép tất cả phương thức REST API.*
 
-![Cache policy và origin request policy](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120832.png)
-*Tắt cache API bằng `CachingDisabled` và chọn `AllViewerExceptHostHeader`.*
+![Chính sách cache và origin request](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120832.png)
+*Tắt cache API và chọn `AllViewerExceptHostHeader`.*
 
-![Xác nhận cache behavior](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120837.png)
-*Kiểm tra lần cuối cache policy, origin request policy và các method trước khi tiếp tục.*
+![Xác nhận hành vi cache](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120837.png)
+*Xác minh cache policy, origin request policy và phương thức API.*
 
-![Thiết lập cache settings hoàn chỉnh](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120826.png)
-*Màn hình tổng hợp cho thấy đã chọn custom cache settings và redirect HTTPS.*
+![Hoàn tất cài đặt cache](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20120826.png)
+*Cài đặt cache tùy chỉnh và chuyển hướng HTTPS đã được chọn.*
 
-#### Bước 3.5: Review và tạo distribution
+#### Bước 3.5: Xem lại và tạo
 
-Kiểm tra origin là ALB, cache policy là `CachingDisabled`, viewer protocol là redirect HTTPS và các method API đã đủ. Sau đó chọn **Create distribution**.
+Xác nhận ALB origin, `CachingDisabled`, chuyển hướng HTTPS, và tất cả các phương thức API cần thiết, sau đó chọn **Create distribution**.
 
-![Review cấu hình distribution](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20121314.png)
-*Review cấu hình trước khi tạo distribution: ALB origin, HTTPS redirect, API methods và cache disabled.*
+![Xem lại cấu hình distribution](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20121314.png)
+*Xem lại origin, HTTPS, phương thức API và cài đặt cache trước khi tạo.*
 
-#### Bước 3.6: Gắn custom domain và ACM certificate
+#### Bước 3.6: Thêm domain tùy chỉnh và chứng chỉ ACM
 
-Nếu tạo distribution trước rồi mới gắn domain, mở distribution → **Add domain** và nhập `cenframs.tuandat.space`.
+Nếu distribution được tạo trước khi thêm domain, mở nó và chọn **Add domain**. Nhập `cenframs.tuandat.space`.
 
-![Nhập custom domain](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20124937.png)
-*Nhập domain backend sẽ phục vụ qua CloudFront.*
+![Nhập domain tùy chỉnh](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20124937.png)
+*Nhập hostname backend được phục vụ bởi CloudFront.*
 
-![CloudFront yêu cầu TLS certificate](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20124945.png)
-*CloudFront yêu cầu chứng chỉ ACM ở region `us-east-1`; đây là yêu cầu bắt buộc cho custom domain.*
+![CloudFront yêu cầu chứng chỉ TLS](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20124945.png)
+*CloudFront yêu cầu chứng chỉ ACM ở vùng `us-east-1` cho domain tùy chỉnh.*
 
-![Chọn ACM certificate](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20125101.png)
-*Chọn certificate bao phủ `*.tuandat.space` sau khi DNS validation hoàn tất.*
+![Chọn chứng chỉ ACM](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20125101.png)
+*Chọn chứng chỉ bao phủ `*.tuandat.space` sau khi hoàn tất xác thực DNS.*
 
-![Review custom domain và certificate](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20125109.png)
-*Kiểm tra domain và certificate trước khi chọn **Add domains**.*
+![Xem lại domain tùy chỉnh và chứng chỉ](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20125109.png)
+*Xem lại domain và chứng chỉ trước khi chọn **Add domains**.*
 
-![CloudFront cập nhật thành công](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20125414.png)
-*CloudFront cập nhật distribution thành công và hiển thị bản ghi DNS cần trỏ về distribution.*
-
----
-
-#### Bước 4: Trỏ tên miền phụ về CloudFront qua Route 53
-
-CDN được sử dụng thông qua Route 53: Namecheap chỉ giữ vai trò đăng ký domain và ủy quyền nameserver, Route 53 quản lý DNS record, còn CloudFront nhận traffic CDN.
-
-1. Quay trở lại **Route 53 Hosted Zone** của bạn.
-2. Bấm **Create record**. Nhập tên bản ghi con là `cenframs`, chọn **A record** và tạo thêm **AAAA record** nếu muốn hỗ trợ IPv6.
-3. Bật công tắc **Alias** (Bản ghi bí danh).
-4. Tại mục **Route traffic to**, chọn **Alias to CloudFront distribution**, chọn distribution CloudFront của bạn và chọn **Create records**. Không trỏ record này trực tiếp về ALB.
-5. Bây giờ bạn đã có thể truy cập backend Spring Boot một cách an toàn qua đường dẫn HTTPS: `https://cenframs.tuandat.space/actuator/health`.
+![Cập nhật CloudFront thành công](/images/5-Workshop/cloudfront/Screenshot%202026-07-28%20125414.png)
+*Cập nhật distribution thành công và CloudFront hiển thị các bản ghi DNS để trỏ đến.*
 
 ---
 
-#### Bước 5: Kiểm thử ứng dụng & Xác minh Lưu trữ tệp tin trên S3
+#### Bước 4: Trỏ Domain Tùy Chỉnh đến CloudFront qua Route 53
 
-Để xác minh toàn bộ kiến trúc đang hoạt động chính xác (Route 53 -> CloudFront CDN -> ALB -> EC2 Backend -> RDS PostgreSQL & Amazon S3), hãy truy cập ứng dụng giao diện và thực hiện các thao tác kiểm thử.
+CDN được sử dụng thông qua Route 53: Namecheap vẫn là nhà đăng ký tên miền và điểm ủy quyền nameserver, Route 53 quản lý các bản ghi DNS, và CloudFront nhận lưu lượng CDN.
 
-##### 5.1. Truy cập Trang Đăng nhập của ứng dụng
-Truy cập đường dẫn `https://cenfra-ms.tuandat.space/login`. Bạn sẽ thấy màn hình đăng nhập tập trung của hệ thống **Pizza Five Guys - Central kitchen management** hiển thị thành công.
+1. Quay lại **Route 53 Hosted Zone** của bạn.
+2. Nhấn **Create record**. Đặt tên bản ghi là `cenframs`, chọn **A record**, và thêm **AAAA record** nếu cần hỗ trợ IPv6.
+3. Bật công tắc **Alias**.
+4. Tại mục **Route traffic to**, chọn **Alias to CloudFront distribution**, chọn CloudFront distribution của bạn, và nhấn **Create records**. Không trỏ bản ghi này trực tiếp đến ALB.
+5. Bây giờ bạn có thể truy cập ứng dụng Spring Boot một cách an toàn tại `https://cenframs.tuandat.space/actuator/health`.
 
-![Trang đăng nhập ứng dụng](/images/5-Workshop/5.5-Route53-CloudFront/01-login-page.png)
-*Hình 5: Giao diện đăng nhập hệ thống Pizza Five Guys.*
+---
 
-##### 5.2. Trang Tổng quan quản lý (Dashboard)
-Nhập thông tin tài khoản và đăng nhập. Hệ thống sẽ chuyển hướng bạn đến trang Dashboard tổng quan hiển thị các thông tin về tồn kho, đơn hàng hôm nay và danh sách sản phẩm lấy từ cơ sở dữ liệu RDS PostgreSQL.
+#### Bước 5: Kiểm Tra Ứng Dụng & Xác Minh S3 Media Storage
 
-![Trang tổng quan Dashboard](/images/5-Workshop/5.5-Route53-CloudFront/02-dashboard.png)
-*Hình 6: Giao diện tổng quan hệ thống Bếp trung tâm.*
+Để xác minh toàn bộ kiến trúc đang hoạt động chính xác (Route 53 -> CloudFront CDN -> ALB -> EC2 Backend -> RDS PostgreSQL & Amazon S3), truy cập ứng dụng frontend và thực hiện các thao tác thực tế.
 
-##### 5.3. Thêm sản phẩm mới và tải ảnh lên S3
-1. Truy cập mục **Sản phẩm** (`/manager/products`).
-2. Chọn **Thêm sản phẩm**. Nhập tên sản phẩm `Sprite lon`, danh mục `Prepared Food`, đơn vị tính `pack`, đơn giá `20000`.
-3. Chọn một ảnh tải lên và chọn **Thêm sản phẩm**.
+##### 5.1. Truy cập Trang Đăng Nhập
+Trúng cập `https://cenfra-ms.tuandat.space/login`. Bạn sẽ thấy màn hình đăng nhập tập trung cho **Pizza Five Guys Central Kitchen Management**.
+
+![Trang đăng nhập tập trung](/images/5-Workshop/5.5-Route53-CloudFront/01-login-page.png)
+*Hình 5: Cổng đăng nhập Pizza Five Guys Central Kitchen Management.*
+
+##### 5.2. Dashboard Quản Lý
+Nhập thông tin và đăng nhập. Ứng dụng sẽ chuyển hướng bạn đến bảng điều khiển quản lý, nơi bạn có thể thấy trạng thái sản phẩm, tóm tắt đơn hàng và số lượng tồn kho thời gian thực được lấy từ cơ sở dữ liệu RDS PostgreSQL.
+
+![Dashboard quản lý](/images/5-Workshop/5.5-Route53-CloudFront/02-dashboard.png)
+*Hình 6: Tổng quan dashboard hệ thống bếp trung tâm.*
+
+##### 5.3. Thêm Sản Phẩm Mới và Tải Ảnh Lên S3
+1. Truy cập màn hình **Quản lý sản phẩm** (`/manager/products`).
+2. Nhấn **Thêm sản phẩm mới**. Đặt tên là `Sprite lon`, danh mục `Prepared Food`, đơn vị `pack`, và giá `20000`.
+3. Chọn một hình ảnh để tải lên và nhấn **Thêm sản phẩm**.
 
 ![Hộp thoại thêm sản phẩm](/images/5-Workshop/5.5-Route53-CloudFront/03-add-product.png)
-*Hình 7: Form nhập thông tin sản phẩm và tải ảnh minh họa.*
+*Hình 7: Form tạo sản phẩm kèm tải lên hình ảnh.*
 
-##### 5.4. Xác minh sản phẩm tạo thành công
-Sản phẩm vừa tạo sẽ xuất hiện ngay trong danh sách quản lý sản phẩm của hệ thống, xác nhận dữ liệu đã được ghi thành công xuống database PostgreSQL.
+##### 5.4. Xác Minh Sản Phẩm Đã Được Tạo Thành Công
+Sản phẩm được hiển thị trong dashboard và danh mục sản phẩm, xác nhận đã ghi thành công vào cơ sở dữ liệu.
 
-![Danh sách sản phẩm mới thêm](/images/5-Workshop/5.5-Route53-CloudFront/04-product-list.png)
-*Hình 8: Danh sách sản phẩm cập nhật món Sprite lon thành công.*
+![Danh sách sản phẩm](/images/5-Workshop/5.5-Route53-CloudFront/04-product-list.png)
+*Hình 8: Danh mục quản lý sản phẩm hiển thị sản phẩm mới thêm.*
 
-##### 5.5. Xác minh tệp tin ảnh lưu trữ trên Amazon S3
-Nhấp chuột phải vào ảnh sản phẩm vừa thêm và mở trong tab mới. Bạn sẽ thấy địa chỉ URL của ảnh chỉ trực tiếp về S3 bucket của bạn (`https://aws-c8n-s3.s3.us-west-2.amazonaws.com/products/...`). Điều này chứng minh ứng dụng backend đã kết nối và lưu trữ file tĩnh thành công lên Amazon S3.
+##### 5.5. Xác Minh File Media Được Lưu Trữ Trên S3
+Nhấp chuột phải vào ảnh sản phẩm và mở trong thẻ mới. Bạn sẽ thấy ảnh sản phẩm được lưu trữ trực tiếp trên Amazon S3 bucket (`https://aws-c8n-s3.s3.us-west-2.amazonaws.com/products/...`). Điều này xác nhận ứng dụng backend tải lên và phục vụ ảnh thành công bằng AWS S3.
 
 ![URL ảnh trên S3](/images/5-Workshop/5.5-Route53-CloudFront/05-s3-image.png)
-*Hình 9: Ảnh sản phẩm được lưu trữ và tải trực tiếp từ Amazon S3 bucket.*
+*Hình 9: Ảnh sản phẩm được tải lên và phục vụ thành công từ Amazon S3.*
